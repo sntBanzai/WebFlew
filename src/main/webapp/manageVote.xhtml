@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Zarządzaj głosem</title>
+        <f:event type="preRenderComponent" listener="${manageVoteBean.conInit()}"/>
+        <f:event type="preRenderComponent" listener="${manageVoteBean.manageableVote.rebuildResult()}" />
+    </h:head>
+    <h:body>
+        <h:form prependId="false">
+            <h2>Edytujesz głos gracza ${manageVoteBean.nickRecieved}</h2>
+            <h3>Miejsce pierwsze:</h3>
+            <h:selectOneMenu id="place1" value="#{manageVoteBean.manageableVote.firstPlace}">
+                <f:selectItem itemLabel="${manageVoteBean.manageableVote.firstPlace}" />
+                <f:selectItems value="${manageVoteBean.manageableVote.remainingCandidates}"/>
+                <f:ajax listener="#{manageVoteBean.manageableVote.updateRemaining(abe)}" render="place2 place3 place4 place5" />
+            </h:selectOneMenu><br/>
+            <h3>Miejsce drugie:</h3>
+            <h:selectOneMenu id="place2" value="#{manageVoteBean.manageableVote.secondPlace}">
+                <f:selectItem itemLabel="${manageVoteBean.manageableVote.secondPlace}" />
+                <f:selectItems value="${manageVoteBean.manageableVote.remainingCandidates}"/>
+                <f:ajax listener="#{manageVoteBean.manageableVote.updateRemaining(abe)}" render="place1 place3 place4 place5" />
+            </h:selectOneMenu><br/>
+            <h3>Miejsce trzecie:</h3>
+            <h:selectOneMenu id="place3" value="#{manageVoteBean.manageableVote.thirdPlace}">
+                <f:selectItem itemLabel="${manageVoteBean.manageableVote.thirdPlace}" />
+                <f:selectItems value="${manageVoteBean.manageableVote.remainingCandidates}"/>
+                <f:ajax listener="#{manageVoteBean.manageableVote.updateRemaining(abe)}" render="place1 place2 place4 place5" />
+            </h:selectOneMenu><br/>
+            <h3>Miejsce czwarte:</h3>
+            <h:selectOneMenu id="place4" value="#{manageVoteBean.manageableVote.fourthPlace}">
+                <f:selectItem itemLabel="${manageVoteBean.manageableVote.fourthPlace}" />
+                <f:selectItems value="${manageVoteBean.manageableVote.remainingCandidates}"/>
+                <f:ajax listener="#{manageVoteBean.manageableVote.updateRemaining(abe)}" render="place1 place2 place3 place5" />
+            </h:selectOneMenu><br/>
+            <h3>Miejsce piąte:</h3>
+            <h:selectOneMenu id="place5" value="#{manageVoteBean.manageableVote.fifthPlace}">
+                <f:selectItem itemLabel="${manageVoteBean.manageableVote.fifthPlace}" />
+                <f:selectItems value="${registerVoteBean.getauxrvb().remainingCandidates}"/>
+                <f:ajax listener="#{manageVoteBean.manageableVote.updateRemaining(abe)}" render="place1 place2 place3 place4" />
+            </h:selectOneMenu><h:message for="place5" /><br/><br/>
+            <h:outputText value="Podaj wynik procentowy zwycięzcy" /><br/>
+            <h:inputText value="#{manageVoteBean.manageableVote.winnerResult}"  id="blah">
+                <f:validateLength minimum="1" maximum="2"/>
+            </h:inputText><br/>
+            <h:inputText value="#{manageVoteBean.manageableVote.runnerUpResult}"  id="blah2">
+                <f:validateLength minimum="1" maximum="2"/>
+            </h:inputText><br/>
+            <h:commandButton value="Zapisz do bazy!" action="#{manageVoteBean.saveChangedVote()}" id="saveButton" >
+                <f:ajax execute="@this blah blah2" render="saveButtonMessage" />
+            </h:commandButton>
+            <h:message for="saveButton" id="saveButtonMessage"/><br/>
+            <h:link value="Powrót" outcome="viewBets.xhtml" id="return">
+                <f:event type="preValidate" listener="#{manageVoteBean.conEnd()}" />
+            </h:link>
+        </h:form>
+    </h:body>
+</html>
+

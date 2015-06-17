@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>FLEW 2015</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:event type="preRenderView" listener="${registerVoteBean.conInit()}"/>
+    </h:head>
+    <h:body>
+        <div>
+            <h1>Zarejestruj uczestnika</h1><br/>
+            <h:form prependId="false" >
+                <h:inputText required="true" value="#{registerVoteBean.playersName}" 
+                             id="playa" validatorMessage="Niniejsze pole nie może być puste." disabled="${registerVoteBean.getauxrvb().firstDisabled}" />
+                <h:message for="playa" id="playaMessage"/><br/>
+                <h:commandButton value="Stwórz uczestnika" action="#{registerVoteBean.createPlayer()}" disabled="${registerVoteBean.getauxrvb().firstDisabled}" >
+                    <f:ajax execute="@this playa" render="place1 place2 place3 place4 place5 playa @this playaMessage blah blah2 saveButton"  />
+                </h:commandButton><br/>
+                <div>
+                    <h2> Wskaż typy gracza dla poszczególnych miejsc</h2>
+                    <h3>Miejsce pierwsze:</h3>
+                    <h:selectOneMenu id="place1" disabled="#{registerVoteBean.getauxrvb().secondDisabled}" value="#{registerVoteBean.firstPlace}">
+                        <f:selectItem itemLabel="${registerVoteBean.firstPlace}" />
+                        <f:selectItems value="${registerVoteBean.getauxrvb().remainingCandidates}"/>
+                        <f:ajax listener="#{registerVoteBean.updateRemaining}" render="place2 place3 place4 place5" />
+                    </h:selectOneMenu><br/>
+                    <h3>Miejsce drugie:</h3>
+                    <h:selectOneMenu id="place2" disabled="#{registerVoteBean.getauxrvb().secondDisabled}" value="#{registerVoteBean.secondPlace}">
+                        <f:selectItem itemLabel="${registerVoteBean.secondPlace}" />
+                        <f:selectItems value="${registerVoteBean.getauxrvb().remainingCandidates}"/>
+                        <f:ajax listener="#{registerVoteBean.updateRemaining}" render="place1 place3 place4 place5" />
+                    </h:selectOneMenu><br/>
+                    <h3>Miejsce trzecie:</h3>
+                    <h:selectOneMenu id="place3" disabled="#{registerVoteBean.getauxrvb().secondDisabled}" value="#{registerVoteBean.thirdPlace}">
+                        <f:selectItem itemLabel="${registerVoteBean.thirdPlace}" />
+                        <f:selectItems value="${registerVoteBean.getauxrvb().remainingCandidates}"/>
+                        <f:ajax listener="#{registerVoteBean.updateRemaining}" render="place1 place2 place4 place5" />
+                    </h:selectOneMenu><br/>
+                    <h3>Miejsce czwarte:</h3>
+                    <h:selectOneMenu id="place4" disabled="#{registerVoteBean.getauxrvb().secondDisabled}" value="#{registerVoteBean.fourthPlace}">
+                        <f:selectItem itemLabel="${registerVoteBean.fourthPlace}" />
+                        <f:selectItems value="${registerVoteBean.getauxrvb().remainingCandidates}"/>
+                        <f:ajax listener="#{registerVoteBean.updateRemaining}" render="place1 place2 place3 place5" />
+                    </h:selectOneMenu><br/>
+                    <h3>Miejsce piąte:</h3>
+                    <h:selectOneMenu id="place5" disabled="#{registerVoteBean.getauxrvb().secondDisabled}" value="#{registerVoteBean.fifthPlace}">
+                        <f:selectItem itemLabel="${registerVoteBean.fifthPlace}" />
+                        <f:selectItems value="${registerVoteBean.getauxrvb().remainingCandidates}"/>
+                        <f:ajax listener="#{registerVoteBean.updateRemaining}" render="place1 place2 place3 place4" />
+                    </h:selectOneMenu><h:message for="place5" /><br/><br/>
+                    <h:outputText value="Podaj wynik procentowy zwycięzcy" /><br/>
+                    <h:inputText value="#{registerVoteBean.winnersResult}" disabled="#{registerVoteBean.getauxrvb().secondDisabled}" id="blah">
+                        <f:validateLength minimum="1" maximum="2"/>
+                    </h:inputText><br/>
+                    <h:inputText value="#{registerVoteBean.runnerUpResult}" disabled="#{registerVoteBean.getauxrvb().secondDisabled}" id="blah2">
+                        <f:validateLength minimum="1" maximum="2"/>
+                    </h:inputText><br/>
+                    <h:commandButton value="Zapisz do bazy!" action="#{registerVoteBean.saveToDatabase()}" id="saveButton" disabled="${registerVoteBean.getauxrvb().secondDisabled}">
+                        <f:ajax execute="@this blah blah2 return" render="@form" />
+                    </h:commandButton>
+                    <h:message for="saveButton" /><br/>
+                    <h:link value="Powrót do strony głównej" outcome="index.xhtml" id="return"/>
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>

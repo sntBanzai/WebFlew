@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>FLEW 2015</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <f:event type="preRenderComponent" listener="${establishResultsBean.conInit()}" />
+    </h:head>
+    <h:body>
+        <div>
+            <h:form prependId="false">
+                <h2> Wskaż dane, które mają posłużyć do wyliczenia wyników konkursu</h2>
+                <h3>Miejsce pierwsze:</h3>
+                <h:selectOneMenu id="place1" value="#{establishResultsBean.result.firstPlace}">
+                    <f:selectItem itemLabel="${establishResultsBean.result.firstPlace}" />
+                    <f:selectItems value="${establishResultsBean.result.remainingCandidates}"/>
+                    <f:ajax listener="#{establishResultsBean.result.updateRemaining}" render="place2 place3 place4 place5" />
+                </h:selectOneMenu><br/>
+                <h3>Miejsce drugie:</h3>
+                <h:selectOneMenu id="place2"  value="#{establishResultsBean.result.secondPlace}">
+                    <f:selectItem itemLabel="${establishResultsBean.result.secondPlace}" />
+                    <f:selectItems value="${establishResultsBean.result.remainingCandidates}"/>
+                    <f:ajax listener="#{establishResultsBean.result.updateRemaining}" render="place1 place3 place4 place5" />
+                </h:selectOneMenu><br/>
+                <h3>Miejsce trzecie:</h3>
+                <h:selectOneMenu id="place3" value="#{establishResultsBean.result.thirdPlace}">
+                    <f:selectItem itemLabel="${establishResultsBean.result.thirdPlace}" />
+                    <f:selectItems value="${establishResultsBean.result.remainingCandidates}"/>
+                    <f:ajax listener="#{establishResultsBean.result.updateRemaining}" render="place1 place2 place4 place5" />
+                </h:selectOneMenu><br/>
+                <h3>Miejsce czwarte:</h3>
+                <h:selectOneMenu id="place4" value="#{establishResultsBean.result.fourthPlace}">
+                    <f:selectItem itemLabel="${establishResultsBean.result.fourthPlace}" />
+                    <f:selectItems value="${establishResultsBean.result.remainingCandidates}"/>
+                    <f:ajax listener="#{establishResultsBean.result.updateRemaining}" render="place1 place2 place3 place5" />
+                </h:selectOneMenu><br/>
+                <h3>Miejsce piąte:</h3>
+                <h:selectOneMenu id="place5" value="#{establishResultsBean.result.fifthPlace}">
+                    <f:selectItem itemLabel="${establishResultsBean.result.fifthPlace}" />
+                    <f:selectItems value="${establishResultsBean.result.remainingCandidates}"/>
+                    <f:ajax listener="#{establishResultsBean.result.updateRemaining}" render="place1 place2 place3 place4" />
+                </h:selectOneMenu><h:message for="place5" /><br/><br/>
+                <h:outputText value="Podaj wynik procentowy zwycięzcy" /><br/>
+                <h:inputText value="#{establishResultsBean.result.winnerResult}" id="blah">
+                    <f:validateLength minimum="1" maximum="2"/>
+                </h:inputText><br/>
+                <h:inputText value="#{establishResultsBean.result.runnerUpResult}" id="blah2">
+                    <f:validateLength minimum="1" maximum="2"/>
+                </h:inputText><br/>
+                <h:commandButton value="Wylicz" >
+                    <f:ajax execute="@this dataTab blah blah2" render="dataTab" listener="#{establishResultsBean.result.showTable(abe)}" />
+                </h:commandButton>
+                <h2>Wyniki</h2>
+                <h:outputLabel id="dataTab">
+                    <h:dataTable value="#{establishResultsBean.establishResults()}" var="set" rendered="${establishResultsBean.result.renderTable}" >
+                        <h:column >
+                            <f:facet name="header">Uczestnik</f:facet>
+                                #{set[0]}
+                        </h:column>
+                        <h:column >
+                            <f:facet name="header">Wynik</f:facet>
+                                #{set[1]}
+                        </h:column>
+                    </h:dataTable>
+                </h:outputLabel>
+                <h:commandButton value="Powrót do strony głównej" action="index?redirect=true" immediate="true" >
+                    <f:event type="preValidate" listener="#{establishResultsBean.endCon()}" />
+                </h:commandButton>
+            </h:form>
+        </div>
+    </h:body>
+</html>
